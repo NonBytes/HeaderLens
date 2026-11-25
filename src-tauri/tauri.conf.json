@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicholasbalamy/tauri/dev/crates/tauri-config-schema/schema.json",
-  "productName": "HSC GUI",
+  "productName": "HeaderLens",
   "version": "0.1.0",
-  "identifier": "com.hsc.gui",
+  "identifier": "com.headerlens.app",
   "build": {
     "frontendDist": "../src",
     "beforeDevCommand": "",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "Headers Security Checker",
+        "title": "HeaderLens",
         "width": 1100,
         "height": 800,
         "resizable": true,

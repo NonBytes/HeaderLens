@@ -106,7 +106,7 @@ fn export_report(result: ScanResult, format: String) -> Result<String, String> {
 
 fn generate_markdown_report(result: &ScanResult) -> String {
     let mut md = String::new();
-    md.push_str("# Security Headers Report\n\n");
+    md.push_str("# HeaderLens — Security Headers Report\n\n");
     md.push_str(&format!("**URL:** {}\n", result.url));
     md.push_str(&format!("**Final URL:** {}\n", result.final_url));
     md.push_str(&format!("**Status:** {}\n", result.status_code));

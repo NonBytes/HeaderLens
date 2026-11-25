@@ -12,10 +12,17 @@ pub struct HistoryEntry {
 }
 
 fn history_path() -> PathBuf {
-    let mut path = data_dir().unwrap_or_else(|| PathBuf::from("."));
-    path.push("hsc-gui");
+    let base = data_dir().unwrap_or_else(|| PathBuf::from("."));
+    let mut path = base.join("headerlens");
     fs::create_dir_all(&path).ok();
     path.push("history.json");
+
+    if !path.exists() {
+        let legacy = base.join("hsc-gui").join("history.json");
+        if legacy.exists() {
+            let _ = fs::copy(&legacy, &path);
+        }
+    }
     path
 }
 

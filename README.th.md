@@ -1,8 +1,8 @@
-# Headers Security Checker (HSC GUI)
+# HeaderLens
 
 🇺🇸 [English](README.md)
 
-แอปพลิเคชันสำหรับตรวจสอบ วิเคราะห์ และเปรียบเทียบ HTTP Response Headers เพื่อประเมินความปลอดภัยและการตั้งค่าความปลอดภัยของเว็บเซิร์ฟเวอร์และแอปพลิเคชันของคุณ ตัวแอปถูกพัฒนาขึ้นด้วย **Tauri v2** และ **Rust** ในส่วนของ Backend และเขียนหน้าตาด้วย **HTML5 / CSS3 / JavaScript** (Vanilla) ทำให้มีขนาดกะทัดรัด ทำงานได้รวดเร็ว และประหยัดทรัพยากรเครื่อง
+**HeaderLens** คือแอปพลิเคชันสำหรับตรวจสอบ วิเคราะห์ และเปรียบเทียบ HTTP Response Headers เพื่อประเมินความปลอดภัยและการตั้งค่าความปลอดภัยของเว็บเซิร์ฟเวอร์และแอปพลิเคชันของคุณ ตัวแอปถูกพัฒนาขึ้นด้วย **Tauri v2** และ **Rust** ในส่วนของ Backend และเขียนหน้าตาด้วย **HTML5 / CSS3 / JavaScript** (Vanilla) ทำให้มีขนาดกะทัดรัด ทำงานได้รวดเร็ว และประหยัดทรัพยากรเครื่อง
 
 ---
 
@@ -58,8 +58,8 @@
 
 1. โคลนคลังโค้ดนี้ลงเครื่อง:
    ```bash
-   git clone https://github.com/NonBytes/hsc-gui.git
-   cd hsc-gui
+   git clone https://github.com/NonBytes/HeaderLens.git
+   cd HeaderLens
    ```
 
 2. ติดตั้ง Tauri CLI บนเครื่องแบบ Global (หากยังไม่ได้ติดตั้ง):
