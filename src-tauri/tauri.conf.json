@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicholasbalamy/tauri/dev/crates/tauri-config-schema/schema.json",
   "productName": "HeaderLens",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.nonbytes.headerlens",
   "build": {
     "frontendDist": "../src",

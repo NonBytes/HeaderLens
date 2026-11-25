@@ -56,7 +56,7 @@
       <!-- Single URL Scan -->
       <section id="tab-scan" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-scan">
         <div class="input-group">
-          <input type="text" id="url-input" class="mono" placeholder="Enter URL (e.g., https://example.com)" spellcheck="false" />
+          <input type="text" id="url-input" class="mono" placeholder="Enter domain (e.g., example.com → HTTP vs HTTPS) or full URL (https://example.com)" spellcheck="false" />
           <button id="scan-btn" class="btn-primary" type="button">Scan</button>
         </div>
         <div class="options-row">
@@ -73,13 +73,13 @@
               <path d="m9.2 12 2 2 3.8-4" />
             </svg>
           </div>
-          <p class="empty-title">Scan a URL</p>
-          <p class="empty-sub">Enter a URL above to analyze its HTTP security headers, transport encryption, cookies, and CORS configuration.</p>
+          <p class="empty-title">Scan a Domain or URL</p>
+          <p class="empty-sub">Enter a bare domain (e.g., <code class="mono">example.com</code>) to scan and compare <strong>HTTP vs HTTPS</strong> side-by-side, or include <code class="mono">http://</code> / <code class="mono">https://</code> for a single scan.</p>
         </div>
-        <div id="scan-loading" class="loading-indicator hidden" aria-live="polite"><div class="spinner"></div><p>Scanning…</p></div>
+        <div id="scan-loading" class="loading-indicator hidden" aria-live="polite"><div class="spinner"></div><p id="scan-loading-text">Scanning…</p></div>
         <div id="scan-results" class="results-container hidden">
           <div class="results-toolbar">
-            <h2>Results</h2>
+            <h2 id="scan-results-title">Results</h2>
             <div class="export-btns">
               <button class="btn-small export-json-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>Export JSON</button>
               <button class="btn-small export-md-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>Export Markdown</button>
@@ -91,12 +91,30 @@
 
       <!-- Batch Scan -->
       <section id="tab-batch" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-batch" hidden>
-        <div class="input-group">
-          <textarea id="batch-urls" class="mono" placeholder="Enter URLs, one per line&#10;https://example.com&#10;https://another.com" rows="5" spellcheck="false"></textarea>
-        </div>
-        <div class="options-row">
-          <label class="checkbox-label"><input type="checkbox" id="batch-follow-redirects" class="visually-hidden-fallback" /> <span>Follow Redirects</span></label>
-          <button id="batch-scan-btn" class="btn-primary push-right" type="button">Scan All</button>
+        <div class="batch-drop" id="batch-drop-zone">
+          <div class="batch-drop-bar">
+            <div class="batch-drop-info">
+              <span class="batch-drop-title">Targets</span>
+              <span id="batch-target-count" class="csp-mini-chip is-more">0 targets</span>
+              <span class="batch-drop-hint">Drop a <code class="mono">.txt</code> / <code class="mono">.csv</code> file or enter one domain / URL per line</span>
+            </div>
+            <div class="batch-drop-actions">
+              <button id="batch-load-file-btn" class="btn-small" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5" /><path d="M4 15v3.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V15" /></svg>
+                Load File…
+              </button>
+              <button id="batch-clear-btn" class="btn-small hidden" type="button">Clear</button>
+            </div>
+          </div>
+          <textarea id="batch-urls" class="mono" placeholder="Enter domains or URLs, one per line (# comments ignored)&#10;example.com&#10;https://another.com" rows="6" spellcheck="false"></textarea>
+          <div class="options-row">
+            <label class="checkbox-label"><input type="checkbox" id="batch-follow-redirects" class="visually-hidden-fallback" /> <span>Follow Redirects</span></label>
+            <button class="btn-text" id="batch-toggle-headers-btn" type="button">+ Custom Headers</button>
+            <button id="batch-scan-btn" class="btn-primary push-right" type="button">Scan All</button>
+          </div>
+          <div id="batch-custom-headers-section" class="hidden mt-12">
+            <textarea id="batch-custom-headers" class="mono" placeholder="Authorization: Bearer token&#10;Cookie: session=xyz" rows="3" spellcheck="false"></textarea>
+          </div>
         </div>
         <div id="batch-empty" class="empty-state" style="margin-top: 24px">
           <div class="empty-icon">
@@ -105,8 +123,8 @@
               <path d="M3.5 12h17M12 3.5c2.6 2.3 3.9 5.2 3.9 8.5s-1.3 6.2-3.9 8.5c-2.6-2.3-3.9-5.2-3.9-8.5s1.3-6.2 3.9-8.5z" />
             </svg>
           </div>
-          <p class="empty-title">Batch scan</p>
-          <p class="empty-sub">Paste a list of URLs above — one per line — and scan them all in one pass.</p>
+          <p class="empty-title">Batch Domain &amp; URL Scan</p>
+          <p class="empty-sub">Load a target list file or paste domains/URLs above. Bare domains (e.g., <code class="mono">example.com</code>) automatically scan &amp; compare <strong>HTTP vs HTTPS</strong> side-by-side.</p>
         </div>
         <div id="batch-loading" class="loading-indicator hidden" aria-live="polite">
           <div class="spinner"></div>
@@ -160,13 +178,14 @@
           <button class="compare-mode active" data-mode="url" type="button">URL vs URL</button>
           <button class="compare-mode" data-mode="file" type="button">URL vs File</button>
           <button class="compare-mode" data-mode="history" type="button">URL vs History</button>
+          <button class="compare-mode" data-mode="hist-vs-hist" type="button">History vs History</button>
         </div>
 
         <div id="compare-mode-url" class="compare-mode-content active">
           <div class="compare-inputs">
             <div class="compare-col">
               <label for="compare-url-a">URL A</label>
-              <input type="text" id="compare-url-a" class="mono" placeholder="https://example.com" spellcheck="false" />
+              <input type="text" id="compare-url-a" class="mono" placeholder="example.com or https://example.com" spellcheck="false" />
               <button class="btn-text compare-headers-toggle mt-6" data-target="compare-headers-a" type="button">+ Custom Headers</button>
               <div id="compare-headers-a" class="hidden mt-6">
                 <textarea id="compare-custom-headers-a" class="mono" placeholder="Authorization: Bearer token&#10;Cookie: session=xyz" rows="3" spellcheck="false"></textarea>
@@ -175,7 +194,7 @@
             <div class="compare-vs">VS</div>
             <div class="compare-col">
               <label for="compare-url-b">URL B</label>
-              <input type="text" id="compare-url-b" class="mono" placeholder="https://another.com" spellcheck="false" />
+              <input type="text" id="compare-url-b" class="mono" placeholder="another.com or https://another.com" spellcheck="false" />
               <button class="btn-text compare-headers-toggle mt-6" data-target="compare-headers-b" type="button">+ Custom Headers</button>
               <div id="compare-headers-b" class="hidden mt-6">
                 <textarea id="compare-custom-headers-b" class="mono" placeholder="Authorization: Bearer token&#10;Cookie: session=xyz" rows="3" spellcheck="false"></textarea>
@@ -192,7 +211,7 @@
           <div class="compare-inputs">
             <div class="compare-col">
               <label for="compare-file-url">URL</label>
-              <input type="text" id="compare-file-url" class="mono" placeholder="https://example.com" spellcheck="false" />
+              <input type="text" id="compare-file-url" class="mono" placeholder="example.com or https://example.com" spellcheck="false" />
             </div>
             <div class="compare-vs">VS</div>
             <div class="compare-col">
@@ -216,7 +235,7 @@
           <div class="compare-inputs">
             <div class="compare-col">
               <label for="compare-hist-url">URL (Live Scan)</label>
-              <input type="text" id="compare-hist-url" class="mono" placeholder="https://example.com" spellcheck="false" />
+              <input type="text" id="compare-hist-url" class="mono" placeholder="example.com or https://example.com" spellcheck="false" />
               <button class="btn-text compare-headers-toggle mt-6" data-target="compare-hist-headers-section" type="button">+ Custom Headers</button>
               <div id="compare-hist-headers-section" class="hidden mt-6">
                 <textarea id="compare-hist-custom-headers" class="mono" placeholder="Authorization: Bearer token&#10;Cookie: session=xyz" rows="3" spellcheck="false"></textarea>
@@ -235,8 +254,34 @@
           </div>
         </div>
 
+        <div id="compare-mode-hist-vs-hist" class="compare-mode-content">
+          <div class="compare-inputs">
+            <div class="compare-col">
+              <label for="compare-hvh-search-a">History Entry A</label>
+              <input type="text" id="compare-hvh-search-a" class="mb-8" placeholder="Search history A…" spellcheck="false" />
+              <div id="compare-hvh-list-a" class="compare-hist-list"></div>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-col">
+              <label for="compare-hvh-search-b">History Entry B</label>
+              <input type="text" id="compare-hvh-search-b" class="mb-8" placeholder="Search history B…" spellcheck="false" />
+              <div id="compare-hvh-list-b" class="compare-hist-list"></div>
+            </div>
+          </div>
+          <div class="compare-actions">
+            <button id="compare-hvh-btn" class="btn-primary" type="button">Compare</button>
+          </div>
+        </div>
+
         <div id="compare-loading" class="loading-indicator hidden" aria-live="polite"><div class="spinner"></div><p>Scanning…</p></div>
-        <div id="compare-results" class="hidden">
+        <div id="compare-results" class="results-container hidden">
+          <div class="results-toolbar">
+            <h2>Results</h2>
+            <div class="export-btns">
+              <button class="btn-small" id="export-compare-json-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>Export JSON</button>
+              <button class="btn-small" id="export-compare-md-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>Export Markdown</button>
+            </div>
+          </div>
           <div class="compare-summary" id="compare-summary"></div>
           <div class="compare-grid">
             <div class="compare-panel" id="compare-panel-a"></div>
@@ -256,6 +301,30 @@
       </section>
     </main>
   </div>
+
+  <!-- Universal Header & Check Inspector Modal -->
+  <dialog id="csp-dialog" class="csp-dialog" closedby="any" aria-labelledby="csp-dialog-title">
+    <div class="csp-dialog-head">
+      <div class="csp-dialog-title-wrap">
+        <span class="section-icon cyan" id="csp-dialog-icon" aria-hidden="true"></span>
+        <div>
+          <h1 id="csp-dialog-title" class="csp-dialog-title mono">Header Inspector</h1>
+          <p class="csp-dialog-sub" id="csp-dialog-sub">Detailed breakdown &amp; security guidance</p>
+        </div>
+      </div>
+      <div class="csp-dialog-actions">
+        <button type="button" id="csp-copy-formatted-btn" class="btn-small">
+          <span class="copy-label" id="csp-copy-btn-label">Copy Header</span>
+        </button>
+        <form method="dialog">
+          <button type="submit" class="btn-icon csp-close-btn" autofocus aria-label="Close Header Inspector" title="Close (Esc)">&times;</button>
+        </form>
+      </div>
+    </div>
+    <div class="csp-dialog-summary" id="csp-dialog-summary"></div>
+    <div class="csp-dialog-body" id="csp-dialog-body"></div>
+  </dialog>
+
   <script src="app.js"></script>
 </body>
 </html>

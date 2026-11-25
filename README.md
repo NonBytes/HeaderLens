@@ -1,22 +1,35 @@
-# HeaderLens
+<p align="center">
+  <img src="assets/icon.png" width="96" alt="HeaderLens Icon" />
+</p>
 
-A sleek, lightweight, cross-platform desktop application for analyzing, auditing, and comparing HTTP response security headers. Built with **Tauri v2** and **Rust** on the backend, paired with a zero-dependency **HTML5 / CSS3 / JavaScript** frontend.
+<h1 align="center">HeaderLens</h1>
+
+<p align="center">
+  A sleek, lightweight, cross-platform desktop application for analyzing, auditing, and comparing HTTP response security headers.<br />
+  Built with <strong>Tauri v2</strong> &amp; <strong>Rust</strong> on the backend and a zero-dependency <strong>HTML5 / CSS3 / JavaScript</strong> frontend.
+</p>
+
+<p align="center">
+  <img src="assets/screenshot.png" alt="HeaderLens scanning https://google.com" width="100%" />
+</p>
 
 ---
 
 ## Features
 
-- **Single URL Scan** — Deep inspection of HTTP security headers, transport security, CORS, and cookies with optional redirect following and custom request headers (e.g., `Authorization`, `Cookie`).
-- **Visual Security Scoring** — Instant `0–100` score gauge, letter grade (`A`–`F`), severity badges (`Critical`, `Warning`, `Info`), and quick summary pills.
-- **Batch URL Scan** — Scan lists of URLs with a live progress bar, collapsible per-site reports, and batch report export.
-- **File & Raw Header Import** — Drag and drop `.txt` / `.headers` / `.http` files, browse from disk, or paste raw HTTP responses directly for offline analysis.
-- **Side-by-Side Comparison** — Compare header postures across environments or over time with an aligned `VS` scoreboard:
-  - **URL vs. URL** (with independent custom headers per target)
+- **Single & Dual-Protocol URL Scan** — Enter a full URL (e.g., `https://google.com`) for a single deep inspection, or enter a bare domain (e.g., `google.com`) to automatically scan and compare **Plain HTTP vs. Encrypted HTTPS** side-by-side. Supports redirect following and custom request headers (`Authorization`, `Cookie`, etc.).
+- **Interactive Block UI & Universal Header Inspector** — Every response header, directive, transport check, cookie flag, warning, and missing header is rendered as color-coded block chips. Click any item to open an interactive breakdown explaining each directive/parameter alongside copy-ready hardened configurations.
+- **Raw HTTP Syntax View** — Toggle `All Response Headers` between structured Block Chips and a syntax-highlighted raw HTTP response viewer with status-code coloring and one-click copy.
+- **Batch Domain & URL Scan** — Load target lists from `.txt` or `.csv` files (via file picker or drag-and-drop) or paste multiple targets. Bare domains automatically run dual `HTTP vs HTTPS` comparisons with live progress tracking and `Expand All` controls.
+- **File & Raw Header Import** — Drag and drop `.txt` / `.headers` / `.http` files or paste raw HTTP responses directly for offline header, CORS, cookie, and info-leak analysis.
+- **4 Side-by-Side Comparison Modes** — Compare header postures with an aligned `VS` scoreboard and live per-side `HTTP | HTTPS` protocol switcher tabs:
+  - **URL vs. URL** (independent custom headers & protocol tabs per target)
   - **URL vs. File / Raw**
   - **URL vs. Scan History**
-- **Grouped Scan History** — Automatic local history grouped by target URL with searchable filtering and inline multi-version timeline browsing.
-- **Export & Copy** — Export full single or batch reports to **JSON** or **Markdown**, or copy all raw response headers in one click.
-- **Dark & Light Themes** — System-aware color scheme with instant manual theme override.
+  - **History vs. History**
+- **Grouped Scan History** — Persistent local scan log grouped by target URL with search filtering, multi-version timeline switching, and per-entry export.
+- **Export Reports** — Export single, dual-protocol, batch, comparison, or historical reports to **JSON** or **Markdown**.
+- **System-Aware Dark & Light Themes** — Automatically follows OS color scheme with instant manual theme override.
 
 ---
 
@@ -24,11 +37,11 @@ A sleek, lightweight, cross-platform desktop application for analyzing, auditing
 
 HeaderLens evaluates responses across five core areas:
 
-1. **Transport Security** — HTTPS enforcement, certificate validation, HTTP-to-HTTPS redirect verification, and `Strict-Transport-Security` (`max-age`, `includeSubDomains`).
-2. **Security Headers (11 Checks)** — `Strict-Transport-Security`, `Content-Security-Policy` (including `frame-ancestors`), `X-Frame-Options` (`DENY` / `SAMEORIGIN`), `X-Content-Type-Options` (`nosniff`), `Referrer-Policy`, `Permissions-Policy`, `Cache-Control` (`no-store`), `Cross-Origin-Opener-Policy`, `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy`, and `X-XSS-Protection`.
+1. **Transport Security** — HTTPS enforcement, TLS certificate validation, HTTP-to-HTTPS redirect verification, and `Strict-Transport-Security` (`max-age`, `includeSubDomains`, `preload`).
+2. **Security Headers (11 Checks)** — `Strict-Transport-Security`, `Content-Security-Policy` (including directive-by-directive parsing and `frame-ancestors`), `X-Frame-Options` (`DENY` / `SAMEORIGIN`), `X-Content-Type-Options` (`nosniff`), `Referrer-Policy`, `Permissions-Policy`, `Cache-Control` (`no-store`), `Cross-Origin-Opener-Policy`, `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy`, and `X-XSS-Protection`.
 3. **CORS Configuration** — Detects wildcard `*` origins, exploitable `null` origins, missing `Vary: Origin`, and critical `Access-Control-Allow-Origin: *` + `Access-Control-Allow-Credentials: true` misconfigurations.
 4. **Cookie Hardening** — Audits `Set-Cookie` headers for missing `Secure`, `HttpOnly`, and `SameSite=Lax/Strict` attributes.
-5. **Information Leaks** — Flags verbose banner and infrastructure headers (`Server`, `X-Powered-By`, `X-AspNet-Version`, `X-Generator`, `X-Runtime`, `Via`, `X-Cache`, `CF-Ray`, `Server-Timing`).
+5. **Information Leaks** — Flags verbose server and infrastructure banners (`Server`, `X-Powered-By`, `X-AspNet-Version`, `X-Generator`, `X-Runtime`, `Via`, `X-Cache`, `CF-Ray`, `Server-Timing`).
 
 ---
 

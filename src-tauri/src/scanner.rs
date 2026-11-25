@@ -286,7 +286,7 @@ pub fn scan_file(content: &str) -> ScanResult {
                 reqwest::header::HeaderName::from_bytes(k.trim().to_lowercase().as_bytes()),
                 reqwest::header::HeaderValue::from_str(v.trim()),
             ) {
-                headers.insert(name, val);
+                headers.append(name, val);
             }
         }
     }
@@ -299,12 +299,14 @@ pub fn scan_file(content: &str) -> ScanResult {
                 reqwest::header::HeaderName::from_bytes(k.trim().to_lowercase().as_bytes()),
                 reqwest::header::HeaderValue::from_str(v.trim()),
             ) {
-                headers.insert(name, val);
+                headers.append(name, val);
             }
         }
     }
 
     let (present_headers, missing_headers, mut warnings) = analyze_security_headers(&headers);
+    let cors = analyze_cors(&headers, &mut warnings);
+    let cookie_warnings = analyze_cookies(&headers);
     analyze_info_leaks(&headers, &mut warnings);
 
     let mut all_headers: HashMap<String, String> = HashMap::new();
@@ -319,8 +321,8 @@ pub fn scan_file(content: &str) -> ScanResult {
         status_code,
         http_version,
         transport_security: vec![TransportInfo { label: "Source".into(), value: "Local File".into(), status: "info".into() }],
-        cors: Vec::new(),
-        cookie_warnings: Vec::new(),
+        cors,
+        cookie_warnings,
         present_headers,
         missing_headers,
         warnings,

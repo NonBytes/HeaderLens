@@ -112,6 +112,20 @@ fn generate_markdown_report(result: &ScanResult) -> String {
     md.push_str(&format!("**Status:** {}\n", result.status_code));
     md.push_str(&format!("**HTTP Version:** {}\n\n", result.http_version));
 
+    md.push_str("## All Response Headers\n\n");
+    if result.all_headers.is_empty() {
+        md.push_str("None.\n\n");
+    } else {
+        let mut keys: Vec<&String> = result.all_headers.keys().collect();
+        keys.sort();
+        for k in keys {
+            if let Some(v) = result.all_headers.get(k) {
+                md.push_str(&format!("- **{}:** `{}`\n", k, v));
+            }
+        }
+        md.push('\n');
+    }
+
     md.push_str("## Transport Security\n\n");
     for t in &result.transport_security {
         md.push_str(&format!("- **{}:** {}\n", t.label, t.value));
