@@ -1,60 +1,53 @@
 # HeaderLens
 
-🇹🇭 [ภาษาไทย (Thai)](README.th.md)
-
-**HeaderLens** is a sleek, lightweight, and modern cross-platform desktop application designed to analyze, verify, and compare HTTP response headers to audit website security configurations. Built with **Tauri v2** and **Rust** on the backend, and vanilla **HTML5 / CSS3 / JavaScript** on the frontend.
+A sleek, lightweight, cross-platform desktop application for analyzing, auditing, and comparing HTTP response security headers. Built with **Tauri v2** and **Rust** on the backend, paired with a zero-dependency **HTML5 / CSS3 / JavaScript** frontend.
 
 ---
 
-## ✨ Features
+## Features
 
-- **🔍 Single URL Scan**: Perform a deep analysis of security headers on any public webpage. Includes options to follow redirects and inject custom request headers (e.g. for authentication).
-- **📦 Batch URL Scan**: Concurrently analyze multiple URLs at once, saving time when auditing multiple domains.
-- **📄 Raw Header Import**: Analyze response headers directly by pasting raw HTTP header text or importing them from local text files.
-- **⚔️ Side-by-Side Comparison**:
-  - **URL vs. URL**: Compare the header profiles of two different environments (e.g., staging vs. production).
-  - **URL vs. File/Raw**: Compare a live site's headers against a reference file or raw text input.
-- **📜 Scan History**: Keeps a local history log of your previous scans for quick retrieval and review.
-- **📊 Export Reports**: Export security analysis reports directly to **JSON** or clean **Markdown** files.
-- **🌗 Responsive Dark/Light UI**: Eye-pleasing theme toggle for day and night security auditing.
-
----
-
-## 🛡️ Security Header Inspections
-
-The application checks for and rates:
-1. **Transport Security**: HSTS configuration (`Strict-Transport-Security`).
-2. **CORS Policies**: Cross-Origin Resource Sharing setups.
-3. **Cookie Security**: Flags missing `Secure`, `HttpOnly`, and `SameSite` options on response cookies.
-4. **Vulnerabilities & Leaks**: Identifies information leaks from banners/headers (`Server`, `X-Powered-By`, etc.).
-5. **Missing Best-Practice Headers**: Alerts for missing `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and others.
+- **Single URL Scan** — Deep inspection of HTTP security headers, transport security, CORS, and cookies with optional redirect following and custom request headers (e.g., `Authorization`, `Cookie`).
+- **Visual Security Scoring** — Instant `0–100` score gauge, letter grade (`A`–`F`), severity badges (`Critical`, `Warning`, `Info`), and quick summary pills.
+- **Batch URL Scan** — Scan lists of URLs with a live progress bar, collapsible per-site reports, and batch report export.
+- **File & Raw Header Import** — Drag and drop `.txt` / `.headers` / `.http` files, browse from disk, or paste raw HTTP responses directly for offline analysis.
+- **Side-by-Side Comparison** — Compare header postures across environments or over time with an aligned `VS` scoreboard:
+  - **URL vs. URL** (with independent custom headers per target)
+  - **URL vs. File / Raw**
+  - **URL vs. Scan History**
+- **Grouped Scan History** — Automatic local history grouped by target URL with searchable filtering and inline multi-version timeline browsing.
+- **Export & Copy** — Export full single or batch reports to **JSON** or **Markdown**, or copy all raw response headers in one click.
+- **Dark & Light Themes** — System-aware color scheme with instant manual theme override.
 
 ---
 
-## 🛠️ Technology Stack
+## Security Inspections
 
-- **Backend**: 
-  - [Rust](https://www.rust-lang.org/) (Actively utilizing Tauri v2 framework)
-  - `reqwest` & `tokio` for high-performance concurrent asynchronous web scanning
-  - `serde` & `serde_json` for serialization
-- **Frontend**:
-  - Vanilla HTML5 / modern CSS3
-  - Custom JavaScript (compiled statically)
-- **CI/CD**:
-  - GitHub Actions for automated, cross-platform build artifacts (`.dmg`, `.deb`, `.AppImage`, `.msi`, `.exe`) and GitHub Releases.
+HeaderLens evaluates responses across five core areas:
+
+1. **Transport Security** — HTTPS enforcement, certificate validation, HTTP-to-HTTPS redirect verification, and `Strict-Transport-Security` (`max-age`, `includeSubDomains`).
+2. **Security Headers (11 Checks)** — `Strict-Transport-Security`, `Content-Security-Policy` (including `frame-ancestors`), `X-Frame-Options` (`DENY` / `SAMEORIGIN`), `X-Content-Type-Options` (`nosniff`), `Referrer-Policy`, `Permissions-Policy`, `Cache-Control` (`no-store`), `Cross-Origin-Opener-Policy`, `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy`, and `X-XSS-Protection`.
+3. **CORS Configuration** — Detects wildcard `*` origins, exploitable `null` origins, missing `Vary: Origin`, and critical `Access-Control-Allow-Origin: *` + `Access-Control-Allow-Credentials: true` misconfigurations.
+4. **Cookie Hardening** — Audits `Set-Cookie` headers for missing `Secure`, `HttpOnly`, and `SameSite=Lax/Strict` attributes.
+5. **Information Leaks** — Flags verbose banner and infrastructure headers (`Server`, `X-Powered-By`, `X-AspNet-Version`, `X-Generator`, `X-Runtime`, `Via`, `X-Cache`, `CF-Ray`, `Server-Timing`).
 
 ---
 
-## 🚀 Getting Started
+## Tech Stack
 
-### 📋 Prerequisites
+- **Backend:** [Rust](https://www.rust-lang.org/), [Tauri v2](https://v2.tauri.app/), `reqwest` (`rustls-tls`), `tokio`, `serde` / `serde_json`
+- **Frontend:** Vanilla HTML5, CSS3, and ES6+ JavaScript (100% offline, zero external runtime dependencies)
+- **CI/CD:** GitHub Actions cross-platform release workflow producing `.dmg` (macOS arm64 & x64), `.deb` / `.AppImage` (Linux), and `.msi` / `.exe` (Windows)
 
-Before running or building the app, make sure you have the following installed on your machine:
-- **Rust**: [Rustup installer](https://rustup.rs/) (Stable channel).
-- **Tauri Prerequisites**: Follow the official guide to set up system packages for your operating system:
-  - [Tauri Prerequisites Guide](https://v2.tauri.app/start/prerequisites/)
+---
 
-### 📦 Setup & Run
+## Getting Started
+
+### Prerequisites
+
+- **Rust** (stable toolchain via [rustup](https://rustup.rs/))
+- **Platform dependencies for Tauri v2:** see the [Tauri Prerequisites Guide](https://v2.tauri.app/start/prerequisites/)
+
+### Development & Build
 
 1. Clone the repository:
    ```bash
@@ -62,18 +55,18 @@ Before running or building the app, make sure you have the following installed o
    cd HeaderLens
    ```
 
-2. Install the Tauri CLI globally (if you haven't already):
+2. Install the Tauri CLI (if not already installed):
    ```bash
    cargo install tauri-cli --version "^2"
    ```
 
-3. Run the application in development mode:
+3. Run in development mode:
    ```bash
    cargo tauri dev
    ```
 
-4. Build the application for production:
+4. Build a production installer/bundle:
    ```bash
    cargo tauri build
    ```
-   *The compiled installer/bundle for your system will be saved in `src-tauri/target/release/bundle/`.*
+   Output bundles are written to `src-tauri/target/release/bundle/`.
